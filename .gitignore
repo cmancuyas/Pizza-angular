@@ -1,0 +1,15 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+bin/
+obj/
+*.db
+*.DS_Store
+
+# Node.js (Angular)
+web/node_modules/
+web/dist/
+
+# Other system files
+Thumbs.db
