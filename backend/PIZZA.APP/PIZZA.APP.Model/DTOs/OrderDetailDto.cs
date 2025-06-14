@@ -10,7 +10,10 @@ namespace PIZZA.APP.Model.DTOs
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
-        public int PizzaId { get; set; }
+        public string PizzaCode { get; set; } = "";
         public int Quantity { get; set; }
+
+        public PizzaDto? Pizza { get; set; }
     }
+
 }

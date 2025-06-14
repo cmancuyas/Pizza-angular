@@ -4,16 +4,21 @@ import { CommonModule } from '@angular/common';
 import { PizzaTypesRoutingModule } from './pizza-types-routing-module';
 import { PizzaTypesListComponent } from './pizza-types-list/pizza-types-list.component';
 import { PizzaTypesUploadComponent } from './pizza-types-upload/pizza-types-upload.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PizzaTypesAddComponent } from './pizza-types-add/pizza-types-add.component';
+import { PizzaTypesEditComponent } from './pizza-types-edit/pizza-types-edit.component';
 
 
 @NgModule({
   declarations: [
     PizzaTypesListComponent,
-    PizzaTypesUploadComponent
+    PizzaTypesUploadComponent,
+    PizzaTypesAddComponent,
+    PizzaTypesEditComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     PizzaTypesRoutingModule
   ]

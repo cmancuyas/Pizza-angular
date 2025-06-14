@@ -1,0 +1,83 @@
+<div class="container mt-3">
+  <h3>Add Order</h3>
+  <form (ngSubmit)="saveOrder()" #orderForm="ngForm">
+    <div class="mb-2">
+      <label>Date</label>
+      <input
+        [(ngModel)]="order.date"
+        name="date"
+        class="form-control"
+        required
+        type="date"
+      />
+    </div>
+    <div class="mb-2">
+      <label>Time</label>
+      <input
+        [(ngModel)]="order.time"
+        name="time"
+        class="form-control"
+        required
+        type="time"
+      />
+    </div>
+    <div class="mb-3">
+      <label>Pizzas</label>
+      <div
+        *ngFor="let detail of order.orderDetails; let i = index"
+        class="row mb-2 align-items-end"
+      >
+        <div class="col">
+          <select
+            [(ngModel)]="detail.pizzaCode"
+            name="pizzaCode_{{ i }}"
+            class="form-control"
+            required
+          >
+            <option [ngValue]="''" disabled selected>Select pizza</option>
+            <option *ngFor="let pizza of pizzas" [ngValue]="pizza.pizzaCode">
+              {{ pizza.pizzaType?.name }} ({{ pizza.size }})
+            </option>
+          </select>
+        </div>
+        <div class="col">
+          <input
+            type="number"
+            [(ngModel)]="detail.quantity"
+            name="quantity_{{ i }}"
+            class="form-control"
+            required
+            min="1"
+          />
+        </div>
+        <div class="col-auto">
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="removeOrderDetailRow(i)"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm mt-2"
+        (click)="addOrderDetailRow()"
+      >
+        Add another pizza
+      </button>
+    </div>
+    <button type="submit" class="btn btn-success me-2" [disabled]="loading">
+      Save
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="goBack()"
+      [disabled]="loading"
+    >
+      Back
+    </button>
+  </form>
+</div>

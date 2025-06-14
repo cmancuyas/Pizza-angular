@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PIZZA.APP.Model.DTOs
+﻿namespace PIZZA.APP.Model.DTOs
 {
     public class PizzaDto
     {
-        public int Id { get; set; }
-        public int PizzaTypeId { get; set; }
-        public string Size { get; set; } = string.Empty;
+        public int Id { get; set; }                          // DB PK
+        public string PizzaCode { get; set; } = "";          // Business key (e.g. "bbq_ckn_m")
+        public string PizzaTypeCode { get; set; } = "";      // FK to PizzaTypeCode
+        public string Size { get; set; } = "";
         public decimal Price { get; set; }
+
+        public PizzaTypeDto? PizzaType { get; set; }         // Navigation property
     }
+
 }

@@ -10,7 +10,6 @@ import { SidebarModule } from './shared/sidebar/sidebar-module';
 @NgModule({
   declarations: [
     App,
-
   ],
   imports: [
     HttpClientModule,

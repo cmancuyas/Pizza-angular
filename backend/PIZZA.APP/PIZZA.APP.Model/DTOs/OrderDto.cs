@@ -9,7 +9,8 @@ namespace PIZZA.APP.Model.DTOs
     public class OrderDto
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public TimeSpan Time { get; set; }
+        public string Date { get; set; } = ""; // "yyyy-MM-dd"
+        public string Time { get; set; } = ""; // "HH:mm"
+        public List<OrderDetailDto> OrderDetails { get; set; } = new();
     }
 }

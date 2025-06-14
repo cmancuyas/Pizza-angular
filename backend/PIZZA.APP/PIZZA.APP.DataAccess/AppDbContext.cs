@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PIZZA.APP.Model.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PIZZA.APP.DataAccess
 {
@@ -21,6 +15,26 @@ namespace PIZZA.APP.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Business key indexes
+            modelBuilder.Entity<Pizza>()
+                .HasIndex(p => p.PizzaCode)
+                .IsUnique();
+
+            modelBuilder.Entity<PizzaType>()
+                .HasIndex(pt => pt.PizzaTypeCode)
+                .IsUnique();
+
+            // Optional: enforce required + length
+            modelBuilder.Entity<Pizza>()
+                .Property(p => p.PizzaCode)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<PizzaType>()
+                .Property(pt => pt.PizzaTypeCode)
+                .IsRequired()
+                .HasMaxLength(50);
         }
     }
 }

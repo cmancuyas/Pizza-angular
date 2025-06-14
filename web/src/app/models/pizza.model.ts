@@ -1,6 +1,10 @@
+import { PizzaType } from './pizza-type.model';
+
 export interface Pizza {
-  pizza_id: number;
-  pizza_type_id: number;
+  id: number;
+  pizzaCode: string;
+  pizzaTypeCode: string;
   size: string;
   price: number;
+  pizzaType?: PizzaType;
 }

@@ -1,41 +1,82 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Pizza } from '../../../models/pizza.model';
+import { PizzaType } from '../../../models/pizza-type.model';
 import { PizzasService } from '../../../services/pizzas.service';
+import { PizzaTypesService } from '../../../services/pizza-types.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pizzas-list',
   standalone: false,
   templateUrl: './pizzas-list.component.html',
-  styleUrl: './pizzas-list.component.css',
+  styleUrls: ['./pizzas-list.component.css'],
 })
-export class PizzasListComponent {
+export class PizzasListComponent implements OnInit {
   pizzas: Pizza[] = [];
+  pizzaTypes: PizzaType[] = [];
   loading = false;
+  totalItems = 0;
+  currentPage = 1;
+  pageSize = 10;
 
-  constructor(private pizzasService: PizzasService) {}
+  constructor(
+    private pizzasService: PizzasService,
+    private pizzaTypesService: PizzaTypesService
+  ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+    this.loadPizzaTypes();
     this.loadPizzas();
+  }
+
+  loadPizzaTypes(): void {
+    this.pizzaTypesService.getAll(1, 100).subscribe({
+      next: (res) => {
+        this.pizzaTypes = res.items;
+      },
+      error: () => {
+        Swal.fire('Error', 'Failed to load pizza types.', 'error');
+      },
+    });
   }
 
   loadPizzas(): void {
     this.loading = true;
-    this.pizzasService.getAll().subscribe({
-      next: (data) => {
-        this.pizzas = data;
+    this.pizzasService.getAll(this.currentPage, this.pageSize).subscribe({
+      next: (result) => {
+        this.pizzas = result.items;
+        this.totalItems = result.total;
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         Swal.fire('Error', 'Failed to load pizzas.', 'error');
         this.loading = false;
       },
     });
   }
 
-  deletePizza(id: number): void {
+  getPizzaTypeName(pizzaTypeCode: string): string {
+    const pizzaType = this.pizzaTypes.find(
+      (t) => t.pizzaTypeCode === pizzaTypeCode
+    );
+    return pizzaType ? pizzaType.name : 'Unknown';
+  }
+
+  get pageCount(): number {
+    return Math.ceil(this.totalItems / this.pageSize);
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.pageCount }, (_, i) => i + 1);
+  }
+
+  onPageChange(page: number): void {
+    if (page < 1 || page > this.pageCount) return;
+    this.currentPage = page;
+    this.loadPizzas();
+  }
+
+  deletePizza(pizzaCode: string): void {
     Swal.fire({
       title: 'Are you sure?',
       text: 'This will permanently delete the pizza.',
@@ -45,7 +86,7 @@ export class PizzasListComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.loading = true;
-        this.pizzasService.delete(id).subscribe({
+        this.pizzasService.delete(pizzaCode).subscribe({
           next: () => {
             Swal.fire('Deleted!', 'Pizza deleted.', 'success');
             this.loadPizzas();

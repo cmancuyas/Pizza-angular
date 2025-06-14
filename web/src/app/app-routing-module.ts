@@ -19,13 +19,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/orders/orders-module').then((m) => m.OrdersModule),
   },
-  {
-    path: 'order-details',
-    loadChildren: () =>
-      import('./modules/order-details/order-details-module').then(
-        (m) => m.OrderDetailsModule
-      ),
-  },
   { path: '', redirectTo: '/pizza-types', pathMatch: 'full' },
   { path: '**', redirectTo: '/pizza-types' },
 ];

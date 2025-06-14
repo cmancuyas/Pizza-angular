@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PIZZA.APP.Interfaces;
 using PIZZA.APP.Model.DTOs;
@@ -20,55 +19,80 @@ namespace PIZZA.APP.Controllers
             _mapper = mapper;
         }
 
+        // GET: api/PizzaTypes?pageNumber=1&pageSize=10
         [HttpGet]
-        public async Task<IActionResult> GetPizzaTypes()
+        public async Task<IActionResult> GetPizzaTypes(int pageNumber = 1, int pageSize = 10)
         {
-            var pizzaTypes = await _unitOfWork.PizzaTypes.GetAllAsync();
-            var pizzaTypeDtos = _mapper.Map<IEnumerable<PizzaTypeDto>>(pizzaTypes);
-            return Ok(pizzaTypeDtos);
+            var (pizzaTypes, totalCount) = await _unitOfWork.PizzaTypes.GetAllAsync(
+                null,          // No filter
+                "Pizzas",      // Include navigation
+                null,          // No ordering
+                false,         // No tracking
+                pageSize,
+                pageNumber);
+
+            var dtoList = _mapper.Map<IEnumerable<PizzaTypeDto>>(pizzaTypes);
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+            return Ok(dtoList);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPizzaType(int id)
+        // GET: api/PizzaTypes/{code}
+        [HttpGet("{pizzaTypeCode}")]
+        public async Task<IActionResult> GetPizzaType(string pizzaTypeCode)
         {
-            var pizzaType = await _unitOfWork.PizzaTypes.GetByIdAsync(id);
+            var pizzaType = await _unitOfWork.PizzaTypes.GetAsync(
+                x => x.PizzaTypeCode == pizzaTypeCode,
+                "Pizzas");
+
             if (pizzaType == null)
                 return NotFound();
+
             var dto = _mapper.Map<PizzaTypeDto>(pizzaType);
             return Ok(dto);
         }
 
+        // POST: api/PizzaTypes
         [HttpPost]
         public async Task<IActionResult> CreatePizzaType([FromBody] PizzaTypeDto pizzaTypeDto)
         {
+            var exists = await _unitOfWork.PizzaTypes.GetAsync(x => x.PizzaTypeCode == pizzaTypeDto.PizzaTypeCode);
+            if (exists != null)
+                return Conflict($"Pizza type code '{pizzaTypeDto.PizzaTypeCode}' already exists.");
+
             var pizzaType = _mapper.Map<PizzaType>(pizzaTypeDto);
             await _unitOfWork.PizzaTypes.AddAsync(pizzaType);
             await _unitOfWork.CompleteAsync();
-            return CreatedAtAction(nameof(GetPizzaType), new { id = pizzaType.Id }, _mapper.Map<PizzaTypeDto>(pizzaType));
+
+            var createdDto = _mapper.Map<PizzaTypeDto>(pizzaType);
+            return CreatedAtAction(nameof(GetPizzaType), new { pizzaTypeCode = pizzaType.PizzaTypeCode }, createdDto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePizzaType(int id, [FromBody] PizzaTypeDto pizzaTypeDto)
+        // PUT: api/PizzaTypes/{code}
+        [HttpPut("{pizzaTypeCode}")]
+        public async Task<IActionResult> UpdatePizzaType(string pizzaTypeCode, [FromBody] PizzaTypeDto pizzaTypeDto)
         {
-            var existing = await _unitOfWork.PizzaTypes.GetByIdAsync(id);
+            var existing = await _unitOfWork.PizzaTypes.GetAsync(x => x.PizzaTypeCode == pizzaTypeCode);
             if (existing == null)
                 return NotFound();
 
-            _mapper.Map(pizzaTypeDto, existing); // Map updates onto existing entity
+            _mapper.Map(pizzaTypeDto, existing);
             _unitOfWork.PizzaTypes.Update(existing);
             await _unitOfWork.CompleteAsync();
+
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePizzaType(int id)
+        // DELETE: api/PizzaTypes/{code}
+        [HttpDelete("{pizzaTypeCode}")]
+        public async Task<IActionResult> DeletePizzaType(string pizzaTypeCode)
         {
-            var existing = await _unitOfWork.PizzaTypes.GetByIdAsync(id);
+            var existing = await _unitOfWork.PizzaTypes.GetAsync(x => x.PizzaTypeCode == pizzaTypeCode);
             if (existing == null)
                 return NotFound();
 
-            _unitOfWork.PizzaTypes.Remove(existing);
+            await _unitOfWork.PizzaTypes.RemoveAsync(existing);
             await _unitOfWork.CompleteAsync();
+
             return NoContent();
         }
     }

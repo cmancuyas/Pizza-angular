@@ -1,0 +1,55 @@
+<div class="container mt-3" *ngIf="order">
+  <div class="row">
+    <!-- Card 1: Order Details -->
+    <div class="col-md-6 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold">Order Details</div>
+        <div class="card-body">
+          <p><strong>Order ID:</strong> {{ order.id }}</p>
+          <p><strong>Date:</strong> {{ order.date }}</p>
+          <p><strong>Time:</strong> {{ order.time }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Pizza Details -->
+    <div class="col-md-6 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold">Pizza Details</div>
+        <div
+          class="card-body"
+          *ngIf="
+            order?.orderDetails && order.orderDetails.length > 0;
+            else noPizzas
+          "
+        >
+          <div *ngFor="let detail of order.orderDetails; let last = last">
+            <div>
+              <strong>Pizza:</strong>
+              {{ detail.pizza?.pizzaType?.name || "Unknown" }}
+              <span *ngIf="detail.pizza?.size">
+                ({{ detail.pizza?.size }})
+              </span>
+
+              <br />
+              <strong>Quantity:</strong> {{ detail.quantity }}<br />
+              <strong>Price:</strong>
+              {{
+                detail.pizza?.price ?? 0 | currency : "PHP" : "symbol" : "1.2-2"
+              }}
+            </div>
+            <hr *ngIf="!last" />
+          </div>
+        </div>
+        <ng-template #noPizzas>
+          <p>No pizzas in this order.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-secondary mt-3" routerLink="/orders">
+    <i class="bi bi-arrow-left"></i> Back to Orders
+  </button>
+</div>
+
+<div *ngIf="loading" class="text-center mt-2">Loading...</div>

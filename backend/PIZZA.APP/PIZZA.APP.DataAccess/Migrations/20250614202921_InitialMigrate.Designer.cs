@@ -12,7 +12,7 @@ using PIZZA.APP.DataAccess;
 namespace PIZZA.APP.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250614080203_InitialMigrate")]
+    [Migration("20250614202921_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -61,6 +61,9 @@ namespace PIZZA.APP.DataAccess.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
@@ -78,6 +81,11 @@ namespace PIZZA.APP.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("PizzaCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("PizzaTypeId")
                         .HasColumnType("int");
 
@@ -90,6 +98,9 @@ namespace PIZZA.APP.DataAccess.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PizzaCode")
+                        .IsUnique();
 
                     b.HasIndex("PizzaTypeId");
 
@@ -106,20 +117,28 @@ namespace PIZZA.APP.DataAccess.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Ingredients")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PizzaTypeCode")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PizzaTypeCode")
+                        .IsUnique();
 
                     b.ToTable("PizzaTypes");
                 });

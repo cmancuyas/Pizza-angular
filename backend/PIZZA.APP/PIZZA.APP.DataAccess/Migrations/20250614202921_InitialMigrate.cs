@@ -31,9 +31,10 @@ namespace PIZZA.APP.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Ingredients = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                    PizzaTypeCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Ingredients = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,6 +47,7 @@ namespace PIZZA.APP.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    PizzaCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PizzaTypeId = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -69,7 +71,8 @@ namespace PIZZA.APP.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     PizzaId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,9 +102,21 @@ namespace PIZZA.APP.DataAccess.Migrations
                 column: "PizzaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pizzas_PizzaCode",
+                table: "Pizzas",
+                column: "PizzaCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pizzas_PizzaTypeId",
                 table: "Pizzas",
                 column: "PizzaTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PizzaTypes_PizzaTypeCode",
+                table: "PizzaTypes",
+                column: "PizzaTypeCode",
+                unique: true);
         }
 
         /// <inheritdoc />

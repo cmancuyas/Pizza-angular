@@ -1,5 +1,6 @@
 export interface PizzaType {
-  pizza_type_id: number;
+  id: number;
+  pizzaTypeCode: string;
   name: string;
   category: string;
   ingredients: string;

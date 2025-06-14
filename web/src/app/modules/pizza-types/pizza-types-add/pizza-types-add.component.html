@@ -1,0 +1,24 @@
+<div class="container mt-3">
+  <h3>Add Pizza Type</h3>
+  <form (ngSubmit)="savePizzaType()">
+    <div class="mb-2">
+      <label>Pizza Type ID <span class="text-danger">*</span></label>
+      <input [(ngModel)]="pizzaType.pizzaTypeCode" name="pizzaTypeCode" class="form-control" required placeholder="e.g. bbq_ckn">
+      <small class="text-muted">Unique string key (e.g. bbq_ckn)</small>
+    </div>
+    <div class="mb-2">
+      <label>Name</label>
+      <input [(ngModel)]="pizzaType.name" name="name" class="form-control" required>
+    </div>
+    <div class="mb-2">
+      <label>Category</label>
+      <input [(ngModel)]="pizzaType.category" name="category" class="form-control" required>
+    </div>
+    <div class="mb-2">
+      <label>Ingredients</label>
+      <input [(ngModel)]="pizzaType.ingredients" name="ingredients" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success me-2" [disabled]="loading">Save</button>
+    <button type="button" class="btn btn-secondary" (click)="goBack()" [disabled]="loading">Back</button>
+  </form>
+</div>

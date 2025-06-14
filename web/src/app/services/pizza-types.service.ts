@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { PizzaType } from '../models/pizza-type.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PizzaTypesService {
-  private apiUrl = 'http://localhost:5000/api/pizza-types'; // Change to your backend URL
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<PizzaType[]> {
-    return this.http.get<PizzaType[]>(this.apiUrl);
+  add(pizzaType: PizzaType): Observable<PizzaType> {
+    return this.http.post<PizzaType>(`${this.apiUrl}/PizzaTypes`, pizzaType);
   }
 
-  getById(id: number): Observable<PizzaType> {
-    return this.http.get<PizzaType>(`${this.apiUrl}/${id}`);
+  update(pizzaTypeId: string, pizzaType: PizzaType): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/PizzaTypes/${pizzaTypeId}`, pizzaType);
   }
 
-  create(pizzaType: PizzaType): Observable<PizzaType> {
-    return this.http.post<PizzaType>(this.apiUrl, pizzaType);
+  delete(pizzaTypeId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/PizzaTypes/${pizzaTypeId}`);
   }
 
-  update(id: number, pizzaType: PizzaType): Observable<PizzaType> {
-    return this.http.put<PizzaType>(`${this.apiUrl}/${id}`, pizzaType);
+  getAll(page?: number, pageSize?: number): Observable<{ items: PizzaType[], total: number }> {
+    let url = `${this.apiUrl}/PizzaTypes`;
+    const params: string[] = [];
+
+    if (page !== undefined) params.push(`pageNumber=${page}`);
+    if (pageSize !== undefined) params.push(`pageSize=${pageSize}`);
+    if (params.length) url += '?' + params.join('&');
+
+    return this.http.get<PizzaType[]>(url, { observe: 'response' }).pipe(
+      map(resp => ({
+        items: resp.body || [],
+        total: +(resp.headers.get('X-Total-Count') ?? 0)
+      }))
+    );
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  getById(pizzaTypeId: string): Observable<PizzaType> {
+    return this.http.get<PizzaType>(`${this.apiUrl}/PizzaTypes/${pizzaTypeId}`);
   }
-
-  // For upload, to be implemented later
 }

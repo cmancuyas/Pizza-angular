@@ -1,14 +1,15 @@
 <div class="container mt-3">
   <h3>Pizzas</h3>
-  <button class="btn btn-primary mb-2" (click)="loadPizzas()" [disabled]="loading">
-    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-    Refresh
-  </button>
+
+  <a class="btn btn-success mb-2 me-2" [routerLink]="['/pizzas/add']">
+    <i class="bi bi-plus-lg"></i> Add Pizza
+  </a>
+
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Pizza Type ID</th>
+        <th>Pizza ID</th>
+        <th>Pizza Type</th>
         <th>Size</th>
         <th>Price</th>
         <th>Actions</th>
@@ -16,17 +17,64 @@
     </thead>
     <tbody>
       <tr *ngFor="let pizza of pizzas">
-        <td>{{ pizza.pizza_id }}</td>
-        <td>{{ pizza.pizza_type_id }}</td>
+        <td>{{ pizza.pizzaCode }}</td>
+        <td>{{ pizza.pizzaType?.name || "Unknown" }}</td>
         <td>{{ pizza.size }}</td>
-        <td>{{ pizza.price | currency }}</td>
+        <td>{{ pizza.price | currency : "PHP" : "symbol" : "1.2-2" }}</td>
         <td>
-          <button class="btn btn-danger btn-sm" (click)="deletePizza(pizza.pizza_id)" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          <a
+            class="btn btn-primary btn-sm me-2"
+            [routerLink]="['/pizzas/edit', pizza.pizzaCode]"
+          >
+            <i class="bi bi-pencil"></i> Edit
+          </a>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="deletePizza(pizza.pizzaCode)"
+            [disabled]="loading"
+          >
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm"
+            ></span>
             Delete
           </button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <nav *ngIf="totalItems > pageSize">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="onPageChange(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          Previous
+        </button>
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let page of pageNumbers"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="onPageChange(page)">
+          {{ page }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === pageCount">
+        <button
+          class="page-link"
+          (click)="onPageChange(currentPage + 1)"
+          [disabled]="currentPage === pageCount"
+        >
+          Next
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div *ngIf="loading" class="text-center mt-2">Loading...</div>
 </div>

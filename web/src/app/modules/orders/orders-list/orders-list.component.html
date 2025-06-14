@@ -1,9 +1,8 @@
 <div class="container mt-3">
   <h3>Orders</h3>
-  <button class="btn btn-primary mb-2" (click)="loadOrders()" [disabled]="loading">
-    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-    Refresh
-  </button>
+  <a class="btn btn-success mb-3" [routerLink]="['/orders/add']">
+    <i class="bi bi-plus-lg"></i> Add Order
+  </a>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -15,16 +14,69 @@
     </thead>
     <tbody>
       <tr *ngFor="let order of orders">
-        <td>{{ order.order_id }}</td>
+        <td>{{ order.id }}</td>
         <td>{{ order.date }}</td>
         <td>{{ order.time }}</td>
         <td>
-          <button class="btn btn-danger btn-sm" (click)="deleteOrder(order.order_id)" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          <a
+            class="btn btn-info btn-sm me-2"
+            [routerLink]="['/orders/details', order.id]"
+          >
+            <i class="bi bi-search"></i> View Details
+          </a>
+          <a
+            class="btn btn-primary btn-sm me-2"
+            [routerLink]="['/orders/edit', order.id]"
+          >
+            <i class="bi bi-pencil"></i> Edit
+          </a>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="deleteOrder(order.id)"
+            [disabled]="loading"
+          >
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm"
+            ></span>
             Delete
           </button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <nav *ngIf="totalItems > pageSize">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button
+          class="page-link"
+          (click)="onPageChange(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          Previous
+        </button>
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let page of pageNumbers"
+        [class.active]="currentPage === page"
+      >
+        <button class="page-link" (click)="onPageChange(page)">
+          {{ page }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === pageCount">
+        <button
+          class="page-link"
+          (click)="onPageChange(currentPage + 1)"
+          [disabled]="currentPage === pageCount"
+        >
+          Next
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <div *ngIf="loading" class="text-center mt-2">Loading...</div>
 </div>

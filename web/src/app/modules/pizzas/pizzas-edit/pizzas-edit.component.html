@@ -1,0 +1,54 @@
+<div class="container mt-3" *ngIf="pizza">
+  <h3>Edit Pizza</h3>
+  <form (ngSubmit)="savePizza()">
+    <div class="mb-2">
+      <label>Pizza Type</label>
+      <select
+        [(ngModel)]="pizza.pizzaTypeCode"
+        name="pizzaTypeCode"
+        class="form-control"
+        required
+      >
+        <option [ngValue]="''" disabled selected>Select type</option>
+        <option *ngFor="let type of pizzaTypes" [ngValue]="type.pizzaTypeCode">
+          {{ type.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-2">
+      <label>Size</label>
+      <input
+        [(ngModel)]="pizza.size"
+        name="size"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="mb-2">
+      <label>Price</label>
+      <input
+        [(ngModel)]="pizza.price"
+        name="price"
+        class="form-control"
+        type="number"
+        required
+      />
+    </div>
+
+    <button type="submit" class="btn btn-success me-2" [disabled]="loading">
+      Save
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="goBack()"
+      [disabled]="loading"
+    >
+      Back
+    </button>
+  </form>
+</div>
+
+<div *ngIf="loading" class="text-center mt-2">Loading...</div>

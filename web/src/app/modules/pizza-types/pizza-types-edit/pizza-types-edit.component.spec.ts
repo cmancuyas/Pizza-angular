@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrderDetailsUpload } from './order-details-upload.component';
+import { PizzaTypesEdit } from './pizza-types-edit.component';
 
-describe('OrderDetailsUpload', () => {
-  let component: OrderDetailsUpload;
-  let fixture: ComponentFixture<OrderDetailsUpload>;
+describe('PizzaTypesEdit', () => {
+  let component: PizzaTypesEdit;
+  let fixture: ComponentFixture<PizzaTypesEdit>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [OrderDetailsUpload]
+      declarations: [PizzaTypesEdit]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OrderDetailsUpload);
+    fixture = TestBed.createComponent(PizzaTypesEdit);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
