@@ -3,14 +3,20 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { HttpClientModule } from '@angular/common/http';
+import { SidebarModule } from './shared/sidebar/sidebar-module';
+
 
 @NgModule({
   declarations: [
-    App
+    App,
+
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SidebarModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()

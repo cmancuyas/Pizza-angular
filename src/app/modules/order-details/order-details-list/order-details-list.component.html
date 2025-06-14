@@ -1,0 +1,32 @@
+<div class="container mt-3">
+  <h3>Order Details</h3>
+  <button class="btn btn-primary mb-2" (click)="loadOrderDetails()" [disabled]="loading">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+    Refresh
+  </button>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Pizza ID</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of orderDetails">
+        <td>{{ detail.order_details_id }}</td>
+        <td>{{ detail.order_id }}</td>
+        <td>{{ detail.pizza_id }}</td>
+        <td>{{ detail.quantity }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="deleteOrderDetail(detail.order_details_id)" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

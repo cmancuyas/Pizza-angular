@@ -1,0 +1,33 @@
+<div class="container mt-3">
+  <h3>Pizza Types</h3>
+  <button class="btn btn-primary mb-2" (click)="loadPizzaTypes()" [disabled]="loading">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+    Refresh
+  </button>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Ingredients</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pizzaType of pizzaTypes">
+        <td>{{ pizzaType.pizza_type_id }}</td>
+        <td>{{ pizzaType.name }}</td>
+        <td>{{ pizzaType.category }}</td>
+        <td>{{ pizzaType.ingredients }}</td>
+        <td>
+          <!-- You will add Edit later -->
+          <button class="btn btn-danger btn-sm" (click)="deletePizzaType(pizzaType.pizza_type_id)" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

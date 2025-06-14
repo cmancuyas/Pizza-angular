@@ -1,0 +1,10 @@
+nav {
+  border-right: 1px solid #dee2e6;
+}
+.nav-link.active {
+  background: #0d6efd;
+  color: #fff !important;
+}
+.nav-link i {
+  margin-right: 8px;
+}
